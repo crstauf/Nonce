@@ -19,7 +19,6 @@ Nonce::register( 'example', 'The Nonce example action' );
 Gets registered _Nonce_ at the specified key.
 
 ```php
-<?php
 $nonce = Nonce::get( 'example' );
 ```
 
@@ -33,7 +32,6 @@ _Nonces_ do not have to be registered: they can be created on the fly, and store
 |`$debug_args`|Array of values for the `vsprintf()` when `__debugInfo()` function is called.|
 
 ```php
-<?php
 $nonce = new Nonce( 'update Post %s (%d)', array( 'post_name', rand( 1, 100 ) ) );
 ```
 
@@ -42,7 +40,6 @@ $nonce = new Nonce( 'update Post %s (%d)', array( 'post_name', rand( 1, 100 ) ) 
 Printing a _Nonce_ object will print the nonce, without replacing the conversion specifications with values.
 
 ```php
-<?php
 $nonce = new Nonce( 'update Post %s (%d)' );
 echo $nonce;
 // equivalent to wp_create_nonce( 'update Post %s (%d)' )
@@ -53,7 +50,6 @@ echo $nonce;
 You can invoke the _Nonce_ object to get the nonce's token, using the passed arguments.
 
 ```php
-<?php
 $nonce = new Nonce( 'update Post %s (%d)' );
 $token = $nonce( 'post_name', 392 );
 // $token === $nonce->token( 'post_name', 392 )
@@ -67,7 +63,6 @@ $token = $nonce( 'post_name', 392 );
 Gets the action of the nonce.
 
 ```php
-<?php
 $nonce = new Nonce( 'update Post %s (%d)' );
 echo $nonce->action( 'post_name', 392 );
 // "update Post post_name (392)"
@@ -78,7 +73,6 @@ echo $nonce->action( 'post_name', 392 );
 Gets the nonce (token).
 
 ```php
-<?php
 $nonce = new Nonce( 'update Post %s (%d)' );
 $token = $nonce->token( 'post_name', 392 );
 // $token === wp_create_nonce( 'update Post post_name (392)' )
@@ -95,7 +89,6 @@ Get the HTML for the nonce form fields.
 |`$referrer`|Bool to include the referrer field. Default: `true`.|
 
 ```php
-<?php
 $nonce = new Nonce( 'update Post %s (%d)' );
 echo $nonce->field( array( 'post_name', 392 ), '_wpnonce', false );
 // <input type="hidden" id="_wpnonce" name="_wpnonce" value="{NONCE}}" />
@@ -112,7 +105,6 @@ Add the nonce onto a URL.
 |`$url`|URL to add the nonce onto. Default: `false` (uses the current URL).|
 
 ```php
-<?php
 $nonce = new Nonce( 'update Post %s (%d)' );
 echo $nonce->url( array( 'post_name', 392 ), '_wpnonce', 'https://google.com' );
 // https://google.com?_wpnonce={NONCE}
@@ -130,7 +122,6 @@ Verify the provided value matches the nonce's action.
 |`$args`|Array of values for the conversion specifications in the `format` property, to generate the action.|
 
 ```php
-<?php
 $nonce = new Nonce( 'update Post %s (%d)' );
 $verified = $nonce->verify( $_POST['_wpnonce'], 'post_name', 392 );
 // $verified === true if $_POST['_wpnonce'] value matches nonce
@@ -147,7 +138,6 @@ Verify nonce in AJAX request.
 |`$die`|Bool to terminate script execution if nonce is invalid.|
 
 ```php
-<?php
 $nonce = new Nonce( 'update Post %s (%d)' );
 $verified = $nonce->verify_ajax( array( 'post_name', 392 ), false, false );
 // $verified === true if value of $_REQUEST['_ajax_nonce'] or $_REQUEST['_wpnonce'] matches nonce
