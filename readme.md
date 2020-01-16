@@ -152,12 +152,28 @@ Verify nonce is valid within admin context.
 |`$args`|Array of values for the conversion specifications in the `format` property, to generate the action.|
 |`$name`|Name of key to check for nonce in `$_REQUEST`. Default: `_wpnonce`.|
 
+```php
+$nonce = new Nonce( 'update Post %s (%d)' );
+$verified = $nonce->verif_admin( array( 'post_name', 392 ) );
+// $verified === true if value of $_REQUEST['_wpnonce'] matches nonce, and referrer is the admin
+```
+
 ### Debug Functions
 
 #### `Nonce::__debugInfo()`
 
 Returns an array of properties and functions using debug data provided in the `debug_args` property.
 
+```php
+$nonce = new Nonce( 'update Post %s (%d)' );
+print_r( $nonce );
+```
+
 #### `Nonce->extra_debug_info()`
 
 Returns an array of values that `wp_create_nonce()` uses to generate the nonce.
+
+```php
+$nonce = new Nonce( 'update Post %s (%d)' );
+print_r( $nonce->extra_debug_info() );
+```
