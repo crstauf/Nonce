@@ -31,7 +31,7 @@ class Nonce {
 	/**
 	 * @var array Arguments for debugging.
 	 */
-	public $debug_args = array();
+	public $args = array();
 
 
 	/*
@@ -51,15 +51,15 @@ class Nonce {
 	 *
 	 * @param string $key
 	 * @param string|int $format
-	 * @param array $debug_args
+	 * @param array $args
 	 */
-	static function register( string $key, $format = -1, array $debug_args = array() ) {
+	static function register( string $key, $format = -1, array $args = array() ) {
 		if ( isset( static::$nonces[$key] ) ) {
 			trigger_error( sprintf( 'Nonce with key <code>%s</code> is already registered.', esc_html( $key ) ) );
 			return;
 		}
 
-		static::$nonces[$key] = new static( $format, $debug_args );
+		static::$nonces[$key] = new static( $format, $args );
 	}
 
 	/**
@@ -92,13 +92,13 @@ class Nonce {
 	 * Construct.
 	 *
 	 * @var string|int $format Format of the nonce action, for use with sprintf().
-	 * @var array $debug_args Arguments to use for debugging.
+	 * @var array $args Arguments to use for debugging.
 	 */
-	function __construct( $format = -1, array $debug_args = array() ) {
+	function __construct( $format = -1, array $args = array() ) {
 		$this->format = $format;
 
-		if ( !empty( $debug_args ) )
-			$this->debug_args = $debug_args;
+		if ( !empty( $args ) )
+			$this->args = $args;
 	}
 
 	/**
@@ -168,25 +168,25 @@ class Nonce {
 		$adminurl     = strtolower( admin_url() );
 		$referer      = strtolower( wp_get_referer() );
 		$verify_admin = isset( $_REQUEST[ $query_arg ] )
-			? wp_verify_nonce( $_REQUEST[ $query_arg ], $this->action( ...$this->debug_args ) )
+			? wp_verify_nonce( $_REQUEST[ $query_arg ], $this->action( ...$this->args ) )
 			: false;
 
 		return array(
 
 			# Properties.
-			'debug_args' => $this->debug_args,
+			'args' => $this->args,
 			'format'     => $this->format,
 
 			# Output functions.
-			'__toString()'             => $this->token(  ...$this->debug_args ),
-			'action( ...$debug_args )' => $this->action( ...$this->debug_args ),
-			'token(  ...$debug_args )' => $this->token(  ...$this->debug_args ),
-			'field(     $debug_args )' => $this->field(     $this->debug_args ),
-			'url(       $debug_args )' => $this->url(       $this->debug_args ),
+			'__toString()'             => $this->token(  ...$this->args ),
+			'action( ...$args )' => $this->action( ...$this->args ),
+			'token(  ...$args )' => $this->token(  ...$this->args ),
+			'field(     $args )' => $this->field(     $this->args ),
+			'url(       $args )' => $this->url(       $this->args ),
 
 			# Verification functions.
-			'verify()'       => $this->verify( $this->token( ...$this->debug_args ), ...$this->debug_args ),
-			'verify_ajax()'  => $this->verify_ajax( $this->debug_args, '_wpnonce', false ),
+			'verify()'       => $this->verify( $this->token( ...$this->args ), ...$this->args ),
+			'verify_ajax()'  => $this->verify_ajax( $this->args, '_wpnonce', false ),
 			'verify_admin()' => $verify_admin,
 
 		);
@@ -210,11 +210,11 @@ class Nonce {
 		$uid = ( int ) wp_get_current_user()->ID;
 
 		if ( !$uid )
-			$uid = apply_filters( 'nonce_user_logged_out', $uid, $this->action( ...$debug_args ) );
+			$uid = apply_filters( 'nonce_user_logged_out', $uid, $this->action( ...$args ) );
 
 		$token = wp_get_session_token();
 		$tick  = wp_nonce_tick();
-		$hash  = wp_hash( $tick . '|' . $this->action( ...$this->debug_args ) . '|' . $uid . '|' . $token, 'nonce' );
+		$hash  = wp_hash( $tick . '|' . $this->action( ...$this->args ) . '|' . $uid . '|' . $token, 'nonce' );
 
 		return array(
 			'uid'                    => $uid,
@@ -355,7 +355,7 @@ add_action( 'init', function() {
 	$nonce = new Nonce( 'qwerty %s %d' );
 	$id = 'caleb';
 	$rand = 15;
-	$nonce->debug_args = array( $id, $rand );
+	$nonce->args = array( $id, $rand );
 	echo $nonce( $id, $rand );
 	var_dump( $nonce );
 
