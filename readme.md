@@ -112,7 +112,7 @@ echo $nonce->url( array( 'post_name', 392 ), '_wpnonce', 'https://google.com' );
 
 ### Verification Functions
 
-#### `Nonce->verify()`
+#### `Nonce->is_valid()`
 
 Verify the provided value matches the nonce's action.
 
@@ -127,7 +127,7 @@ $verified = $nonce->verify( $_POST['_wpnonce'], 'post_name', 392 );
 // $verified === true if $_POST['_wpnonce'] value matches nonce
 ```
 
-#### `Nonce->verify_ajax()`
+#### `Nonce->is_valid_for_ajax()`
 
 Verify nonce in AJAX request.
 
@@ -143,7 +143,7 @@ $verified = $nonce->verify_ajax( array( 'post_name', 392 ), false, false );
 // $verified === true if value of $_REQUEST['_ajax_nonce'] or $_REQUEST['_wpnonce'] matches nonce
 ```
 
-#### `Nonce->verify_admin()`
+#### `Nonce->is_valid_for_admin()`
 
 Verify nonce is valid within admin context.
 

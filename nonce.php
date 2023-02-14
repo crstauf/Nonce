@@ -102,7 +102,7 @@ class Nonce {
 		if ( empty( $args ) ) {
 			return;
 		}
-		
+
 		$this->args = $args;
 	}
 
@@ -253,7 +253,7 @@ class Nonce {
 		if ( empty( $args ) ) {
 			return $this->format;
 		}
-		
+
 		return vsprintf( $this->format, $args );
 	}
 
@@ -323,7 +323,7 @@ class Nonce {
 	 *
 	 * @return int
 	 */
-	public function verify( string $value, ...$args ) : int {
+	public function is_valid( string $value, ...$args ) : int {
 		return ( int ) wp_verify_nonce( $value, $this->action( ...$args ) );
 	}
 
@@ -339,7 +339,7 @@ class Nonce {
 	 *
 	 * @return int
 	 */
-	public function verify_ajax( array $args = array(), $name = false, bool $die = true ) : int {
+	public function is_valid_for_ajax( array $args = array(), $name = false, bool $die = true ) : int {
 		return ( int ) check_ajax_referer( $this->action( ...$args ), $name, $die );
 	}
 
@@ -354,7 +354,7 @@ class Nonce {
 	 *
 	 * @return int
 	 */
-	public function verify_admin( array $args = array(), string $name = '_wpnonce' ) : int {
+	public function is_valid_for_admin( array $args = array(), string $name = '_wpnonce' ) : int {
 		return ( int ) check_admin_referer( $this->action( ...$args ), $name );
 	}
 
@@ -370,7 +370,7 @@ add_action( 'init', function() {
 
 	$action = $nonce->action( $id, $rand );
 	$token  = $nonce->token(  $id, $rand );
-	$verify = $nonce->verify( $token, $id, $rand );
+	$verify = $nonce->is_valid( $token, $id, $rand );
 
 	echo $action . "\n" . $token . "\n" . ( $verify ? 'verified' : 'unverified' );
 	exit;
